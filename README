@@ -7,15 +7,16 @@ equipment. They provide a programmable bitmap display, programmable function
 keys, and can poll and display data values and set data values in a remote PLC
 using the SNP-X serial protocol.
 
-The Device::SNP object implements an SNP-X slave, opens a Device::Serial port
-and answers SNP-X requests to read and write data to a simulated PLC.
+The Device::SNP::Slave object implements an SNP-X slave, opens a
+Device::Serial port and answers SNP-X requests to read and write data to a
+simulated PLC.
 
 This package also contains a sample application that uses a DataPanel 160 to
 implement a remote control panel for the Amarok music player on Linux,
 allowing you to play, pause, next, prev tracks etc.
 
 DataPanels are programmed with a GE application called DataDesigner,
-avaialable from the GE web site for registered customers. Included in this
+available from the GE web site for registered customers. Included in this
 package is a database for DataDesigner 5.2 for the Amarok remote control
 application. You will need DataDesigner 5.2 to download the
 datadesigner/linux.DTB database to the DataPanel 160

@@ -19,9 +19,10 @@
 #
 # Author: Mike McCauley (mikem@open.com.au)
 # Copyright (C) 2006 Mike McCauley
-# $Id: datapanel.pl,v 1.1 2006/05/31 23:30:53 mikem Exp $
+# $Id: datapanel.pl,v 1.1 2006/05/31 23:30:53 mikem Exp mikem $
 
 use strict;
+require "newgetopt.pl";
 use Device::SNP;
 use DCOP::Amarok::Player;
 
@@ -84,12 +85,31 @@ sub write_bits
 
 
 package main;
-my $s = new LinuxDataPanel(Portname => '/dev/ttyUSB0',
-			   Debug => 0);
-die "Could not create Device::SNP::LinuxDataPanel" unless $s;
+my @options = 
+    (
+     'h',                   # Help, show usage
+     'd',                   # Debug
+     'p=s',                 # Port device name, default /dev/ttyUSB0
+     );
+
+&NGetOpt(@options) || &usage;
+&usage if $main::opt_h;
+
+my $port = '/dev/ttyUSB0';
+$port = $main::opt_p if defined $main::opt_p;
+my $s = new LinuxDataPanel(Portname => $port,
+			   Debug => $main::opt_d);
+die "Could not create Device::SNP::LinuxDataPanel\n" unless $s;
 
 $player = DCOP::Amarok::Player->new();
 die "Could not create DCOP::Amarok::Player" unless $player;
 
 # Receive commands and despatch them to the functions in LinuxDataPanel
 $s->run();
+
+#####################################################################
+sub usage
+{
+    print "usage: $0 [-h] [-d] [-p portdevice]\n";
+    exit;
+}

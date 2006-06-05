@@ -13,12 +13,12 @@
 #
 # Author: Mike McCauley (mikem@open.com.au)
 # Copyright (C) 2006 Mike McCauley
-# $Id: SNP.pm,v 1.1 2006/05/31 23:30:53 mikem Exp $
+# $Id: SNP.pm,v 1.1 2006/05/31 23:30:53 mikem Exp mikem $
 use Device::SerialPort;
 use strict;
 
 package Device::SNP;
-our $VERSION = '1.0';
+our $VERSION = '1.1';
 
 $Device::SNP::StartOfMessage = 0x1b;
 $Device::SNP::EndOfBlock     = 0x17;
@@ -26,7 +26,7 @@ $Device::SNP::EndOfBlock     = 0x17;
 $Device::SNP::BroadcastSNPID = "\xff\xff\xff\xff\xff\xff\xff\xff";
 $Device::SNP::NullSNPID      = "\x00\x00\x00\x00\x00\x00\x00\x00";
 
-# SNP Message types (not used here, expcet for XMessage and Text)
+# SNP Message types (not used here, except for XMessage and Text)
 $Device::SNP::MtypeAttach         = 0x41;
 $Device::SNP::MtypeAttachResponse = 0x52;
 $Device::SNP::MtypeMailbox        = 0x4d;
@@ -54,6 +54,7 @@ $Device::SNP::ErrorMinorNone                  = 0x00;
 $Device::SNP::ErrorMinorInvalidInputParameter = 0xf4;
 
 # These variables hold the PLC data in raw format
+# They will auto-vivify to be as big as needed
 %Device::SNP::segment =
     (
      'R'  => [],
@@ -149,6 +150,7 @@ $Device::SNP::ErrorMinorInvalidInputParameter = 0xf4;
 
 package Device::SNP::Slave;
 
+#####################################################################
 sub new
 {
     my ($class, %args) = @_;
@@ -176,6 +178,7 @@ sub new
     return $self;
 }
 
+#####################################################################
 sub run
 {
     my ($self) = @_;
@@ -200,6 +203,7 @@ sub run
     $self->main_loop();
 }
 
+#####################################################################
 sub main_loop
 {
     my ($self) = @_;
@@ -223,6 +227,7 @@ sub main_loop
     }
 }
 
+#####################################################################
 sub handle_raw_message
 {
     my ($self, $msg) = @_;
@@ -274,6 +279,7 @@ sub handle_raw_message
     }
 }
 
+#####################################################################
 sub handle_message
 {
     my ($self, $mtype, $cmddata) = @_;
@@ -290,6 +296,7 @@ sub handle_message
     }
 }
 
+#####################################################################
 sub handle_t_message
 {
     my ($self, $data) = @_;
@@ -320,6 +327,7 @@ sub handle_t_message
     }
 }
 
+#####################################################################
 sub handle_x_message
 {
     my ($self, $snpid, $reqcode, $cmddata) = @_;
@@ -340,6 +348,7 @@ sub handle_x_message
     }
 }
 
+#####################################################################
 sub handle_x_attach
 {
     my ($self, $snpid) = @_;
@@ -355,6 +364,7 @@ sub handle_x_attach
     $self->{attached}++;
 }
 
+#####################################################################
 sub handle_x_read
 {
     my ($self, $snpid, $cmddata) = @_;
@@ -366,6 +376,7 @@ sub handle_x_read
     $self->handle_read($selector, $offset, $length);
 }
 
+#####################################################################
 sub handle_read
 {
     my ($self, $selector, $offset, $length) = @_;
@@ -406,6 +417,7 @@ sub handle_read
     }
 }
 
+#####################################################################
 sub read_words
 {
     my ($self, $segmentname, $offset, $length) = @_;
@@ -418,6 +430,7 @@ sub read_words
     return pack('C*', @{$segment}[$boffset .. ($boffset + $blength)]);
 }
 
+#####################################################################
 sub read_bytes
 {
     my ($self, $segmentname, $offset, $length) = @_;
@@ -428,6 +441,7 @@ sub read_bytes
     return pack('C*', @{$segment}[$offset .. ($offset + $length)]);
 }
 
+#####################################################################
 sub read_bits
 {
     my ($self, $segmentname, $offset, $length) = @_;
@@ -440,6 +454,7 @@ sub read_bits
     return pack('C*', @{$segment}[$boffset .. ($boffset + $blength)]);
 }
 
+#####################################################################
 sub handle_x_write
 {
     my ($self, $snpid, $cmddata) = @_;
@@ -485,6 +500,7 @@ sub handle_x_write
     # Intermediate response is the same is write response
 }
 
+#####################################################################
 # Write data to the sement
 sub handle_write
 {
@@ -508,6 +524,7 @@ sub handle_write
     }
 }
 
+#####################################################################
 sub write_words
 {
     my ($self, $segmentname, $offset, $length, $data) = @_;
@@ -524,6 +541,7 @@ sub write_words
     return 1;
 }
 
+#####################################################################
 sub write_bytes
 {
     my ($self, $segmentname, $offset, $length, $data) = @_;
@@ -538,6 +556,7 @@ sub write_bytes
     return 1;
 }
 
+#####################################################################
 sub write_bits
 {
     my ($self, $segmentname, $offset, $length, $data) = @_;
@@ -565,6 +584,7 @@ sub write_bits
     return 1;
 }
 
+#####################################################################
 sub send_x_attach_response
 {
     my ($self) = @_;
@@ -576,6 +596,7 @@ sub send_x_attach_response
 			       ''));
 }
 
+#####################################################################
 sub send_x_message
 {
     my ($self, $cmddata) = @_;
@@ -583,6 +604,7 @@ sub send_x_message
     $self->send_message($Device::SNP::MtypeXMessage, $cmddata);
 }
 
+#####################################################################
 sub send_message
 {
     my ($self, $mtype, $cmddata) = @_;
@@ -599,6 +621,7 @@ sub send_message
     $self->send_raw_message($msg);
 }
 
+#####################################################################
 sub send_raw_message
 {
     my ($self, $msg) = @_;
@@ -616,6 +639,7 @@ sub send_raw_message
     warn "write incomplete\n" unless $count == length($msg);
 }
 
+#####################################################################
 sub compute_bcc
 {
     my ($s) = @_;
