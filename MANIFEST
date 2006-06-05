@@ -4,6 +4,7 @@ META.yml
 Device/SNP.pm
 MANIFEST
 README
+Changes
 t/t1.t
 datadesigner/README
 datadesigner/linux.DTB

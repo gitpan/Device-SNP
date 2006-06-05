@@ -18,7 +18,7 @@ use Device::SerialPort;
 use strict;
 
 package Device::SNP;
-our $VERSION = '1.1';
+our $VERSION = '1.2';
 
 $Device::SNP::StartOfMessage = 0x1b;
 $Device::SNP::EndOfBlock     = 0x17;
@@ -658,3 +658,74 @@ sub compute_bcc
 }
 
 1;
+__END__
+# Below is stub documentation for your module. You'd better edit it!
+
+=head1 NAME
+
+Device::SNP - Perl extension for the GE Fanuc SNP-X
+serial protocol as used by GE Fanuc DataPanel data terminals.  See
+http://www.gefanuc.com/en/ProductServices/VisPCSolutions/DataPanel/index.html
+
+=head1 SYNOPSIS
+
+  use Device::SNP;
+
+  my $s = new Device::SNP::Slave(
+                       Portname => '/dev/ttyUSB0',
+		       Debug => 0);
+  $s->run();
+
+Amarok serial interface program:
+datapanel.pl [-h] [-d] [-p portdevice]
+
+portdevice defaults to /dev/ttyUSB0
+
+=head1 ABSTRACT
+
+This Device::SNP module contains an implementation of the GE Fanuc SNP-X
+serial protocol as used by GE Fanuc DataPanel data terminals.  See
+http://www.gefanuc.com/en/ProductServices/VisPCSolutions/DataPanel/index.html
+
+=head1 DESCRIPTION
+
+DataPanels are usually used with PLCs to monitor and control industrial
+equipment. They provide a programmable bitmap display, programmable function
+keys, and can poll and display data values and set data values in a remote PLC
+using the SNP-X serial protocol.
+
+The Device::SNP::Slave object implements an SNP-X slave, opens a
+Device::Serial port and answers SNP-X requests to read and write data to a
+simulated PLC.
+
+This package also contains a sample application that uses a DataPanel 160 to
+implement a remote control panel for the Amarok music player on Linux,
+allowing you to play, pause, next, prev tracks etc.
+
+DataPanels are programmed with a GE application called DataDesigner,
+available from the GE web site for registered customers. Included in this
+package is a database for DataDesigner 5.2 for the Amarok remote control
+application. You will need DataDesigner 5.2 to download the
+datadesigner/linux.DTB database to the DataPanel 160
+
+Tested on SuSE linux, but should run on pretty well any Linux or Unix.
+
+=head2 EXPORT
+
+None by default.
+
+=head1 SEE ALSO
+
+
+=head1 AUTHOR
+
+Mike McCauley, E<lt>mikem@open.com.auE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 Mike McCauley
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+=cut

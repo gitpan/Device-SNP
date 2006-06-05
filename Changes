@@ -1,0 +1,12 @@
+Revision history for Perl extension Device::SNP
+
+1.0 2006-06-01
+    - Initial release
+
+1.1 2006-06-05
+    - Added command line args to datpanle.pl to control the port to use,
+    enable debug, usage message etc.
+
+1.2 2006-06-05
+    - Added this Changes file to the distribution
+    - Added documentation to SNP.pm
