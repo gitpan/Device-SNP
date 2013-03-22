@@ -10,3 +10,4 @@ datadesigner/README
 datadesigner/linux.DTB
 datadesigner/tux-sw.gif
 datadesigner/tux-sw.bmp 
+META.json                                Module JSON meta-data (added by MakeMaker)

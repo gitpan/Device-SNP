@@ -13,9 +13,9 @@
 # %Q5	     volup		 Vol -
 # %Q6	     voldown		 Vol +
 #
-# %R1-%I16     artist		 Current song artist (max 32 bytes)
-# %R17-%I32     track		 Current song name text (max 32 bytes)
-# %R33-%I48     album		 Current song album text (max 32 bytes)
+# %R1-%R16     artist		 Current song artist (max 32 bytes)
+# %R17-%R32     track		 Current song name text (max 32 bytes)
+# %R33-%R48     album		 Current song album text (max 32 bytes)
 #
 # Author: Mike McCauley (mikem@open.com.au)
 # Copyright (C) 2006 Mike McCauley
@@ -34,22 +34,30 @@ our @ISA = ('Device::SNP::Slave');
 
 # Here we override some functions in Device::SNP::Slave
 # so we get control when the DataPanel asks for and sets data.
+# Sigh: DP30 seems to need byte swaped text, so need -b flag
 sub read_words
 {
     my ($self, $segmentname, $offset, $length) = @_;
 
+    my $result;
     if ($segmentname eq 'R' && $offset == 0)
     {
-	return pack('a32', $player->artist());
+	$result = $player->artist();
     }
     elsif ($segmentname eq 'R' && $offset == 16)
     {
-	return pack('a32', $player->title());
+	$result = $player->title();
     }
     elsif ($segmentname eq 'R' && $offset == 32)
     {
-	return pack('a32', $player->album());
+	$result = $player->album();
     }
+    if ($main::opt_b)
+    {
+	$result .= "\0" if length $result & 0x1; # pad to even length
+	$result = pack('v*', unpack('n*', $result)); # byte swap
+    }
+    return pack('a32', $result);
 }
 
 sub write_bits
@@ -90,6 +98,7 @@ my @options =
      'h',                   # Help, show usage
      'd',                   # Debug
      'p=s',                 # Port device name, default /dev/ttyUSB0
+     'b',                   # Apply byte swapping (for DP30)
      );
 
 &NGetOpt(@options) || &usage;
@@ -110,6 +119,6 @@ $s->run();
 #####################################################################
 sub usage
 {
-    print "usage: $0 [-h] [-d] [-p portdevice]\n";
+    print "usage: $0 [-h] [-d] [-p portdevice] [-b]\n";
     exit;
 }

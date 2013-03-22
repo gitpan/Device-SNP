@@ -1,6 +1,6 @@
 # Makefile.PL
 #
-# Author: Mike McCauley (mikem@open.com.au)
+# Author: Mike McCauley (mikem@airspayce.com)
 # Copyright (C) 2006 Mike McCauley
 # $Id: Makefile.PL,v 1.1 2006/05/31 23:30:53 mikem Exp $
 
@@ -15,7 +15,7 @@ WriteMakefile
 	},
      
      ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (AUTHOR         => 'Mike McCauley <mikem@open.com.au>') : ()),
+      (AUTHOR         => 'Mike McCauley <mikem@airspayce.com>') : ()),
      dist          => {
          COMPRESS => 'gzip -f',
          SUFFIX   => 'gz',

@@ -11,14 +11,14 @@
 # By default it reads and writes data from the data segments
 # in %Device::SNP::segment
 #
-# Author: Mike McCauley (mikem@open.com.au)
+# Author: Mike McCauley (mikem@airspayce.com)
 # Copyright (C) 2006 Mike McCauley
 # $Id: SNP.pm,v 1.1 2006/05/31 23:30:53 mikem Exp mikem $
 use Device::SerialPort;
 use strict;
 
 package Device::SNP;
-our $VERSION = '1.2';
+our $VERSION = '1.3';
 
 $Device::SNP::StartOfMessage = 0x1b;
 $Device::SNP::EndOfBlock     = 0x17;
@@ -369,6 +369,7 @@ sub handle_x_read
 {
     my ($self, $snpid, $cmddata) = @_;
 
+    print "handle_x_read $snpid\n" if $self->{Debug};
     return unless (   $snpid eq  $Device::SNP::NullSNPID
 		   || $snpid eq $self->{SNPID});
 
@@ -381,7 +382,7 @@ sub handle_read
 {
     my ($self, $selector, $offset, $length) = @_;
 
-    print "handle_x_read $selector, $offset, $length\n" if $self->{Debug};
+    print "handle_read $selector, $offset, $length\n" if $self->{Debug};
 
     my ($segmentname, $type) = @{$Device::SNP::segments{$selector}};
     my $data;
@@ -719,7 +720,7 @@ None by default.
 
 =head1 AUTHOR
 
-Mike McCauley, E<lt>mikem@open.com.auE<gt>
+Mike McCauley, E<lt>mikem@airspayce.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
